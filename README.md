@@ -4,7 +4,7 @@ This script will use Twitter API to read user's timeline, then post to MeWe.
 
 ## Setting up configuration
 
-In `~/.config/twitter2plurk/config.ini`:
+In `~/.config/twitter2mewe/config.ini`:
 
     [default]
     mewe_token = x
