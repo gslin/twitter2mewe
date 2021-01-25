@@ -28,14 +28,22 @@ class Twitter2Mewe(object):
         with selenium.webdriver.Chrome(options=chrome_options) as b:
             b.get(url)
 
+            time.sleep(3)
+
             t = b.find_element_by_css_selector('.postbox-placeholder_textarea')
             t.click()
+
+            time.sleep(3)
 
             t = b.find_element_by_css_selector('.ql-editor')
             t.send_keys(text)
 
+            time.sleep(3)
+
             btn = b.find_element_by_css_selector('.mewe-share-button')
             btn.click()
+
+            time.sleep(3)
 
     def start(self):
         home = os.environ['HOME']
