@@ -3,7 +3,8 @@
 import configparser
 import html
 import os
-import requests
+import selenium
+import selenium.webdriver.chrome.options
 import sqlite3
 import time
 import twitter
@@ -12,6 +13,29 @@ import urllib
 class Twitter2Mewe(object):
     def __init__(self):
         pass
+
+    def post(self, text):
+        url = 'https://mewe.com/myworld'
+
+        home = os.environ['HOME']
+
+        chrome_options = selenium.webdriver.chrome.options.Options()
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--user-data-dir={}/.config/chromium'.format(home))
+        chrome_options.binary_location = '/usr/bin/chromium-browser'
+
+        with selenium.webdriver.Chrome(options=chrome_options) as b:
+            b.get(url)
+
+            t = b.find_element_by_css_selector('.postbox-placeholder_textarea')
+            t.click()
+
+            t = b.find_element_by_css_selector('.ql-editor')
+            t.send_keys(text)
+
+            btn = b.find_element_by_css_selector('.mewe-share-button')
+            btn.click()
 
     def start(self):
         home = os.environ['HOME']
@@ -27,8 +51,6 @@ class Twitter2Mewe(object):
         t_cs = c['default']['twitter_consumer_secret']
         t_user = c['default']['twitter_username']
         t = twitter.Api(access_token_key=t_ak, access_token_secret=t_as, consumer_key=t_ck, consumer_secret=t_cs)
-
-        m_token = c['default']['mewe_token']
 
         s = sqlite3.connect(f_db)
 
@@ -55,19 +77,10 @@ class Twitter2Mewe(object):
                 content = '{} # {}'.format(text, url)
                 print('* content = {}'.format(content))
 
-                data = {"text": content, "imageIds": [], "existingFileIds": [], "mediaIds": [], "public": True, "closeFriends": False}
-                headers = {'Authorization': 'Sgrouples accessToken= ' + m_token}
-                res = requests.post('https://mewe.com/api/v2/home/post', headers=headers, json=data)
+                self.post(content)
 
-                print('* type(status) = {}'.format(type(status)))
-                print('* status = {}'.format(status))
-                print('* type(res) = {}'.format(type(res)))
-                print('* res = {}'.format(res))
-                if 200 == res.status_code:
-                    c.execute(sql_insert, (status.id_str, int(time.time())))
-                    s.commit()
-                else:
-                    s.rollback()
+                c.execute(sql_insert, (status.id_str, int(time.time())))
+                s.commit()
 
 if '__main__' == __name__:
     t = Twitter2Mewe()
