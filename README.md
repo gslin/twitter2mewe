@@ -17,7 +17,7 @@ Then login MeWe and keep cookies.
 
 # Workaround on Chromium
 
-Chromium cannot use cookies in headless mode with latest version (now it's 71), so you need the workaround to install old version, and avoid from upgrading:
+Chromium cannot use cookies in headless mode with latest version (now it's 87), so you need the workaround to install old version, and avoid from upgrading:
 
     apt-cache showpkg chromium-browser
     sudo apt install \
@@ -26,7 +26,7 @@ Chromium cannot use cookies in headless mode with latest version (now it's 71), 
         chromium-codecs-ffmpeg=65.0.3325.181-0ubuntu1
     sudo apt-mark hold chromium-browser chromium-chromedriver chromium-codecs-ffmpeg
 
-Since this chromium is old, I suggest that just use it for twitter2facebook (so it will only access Facebook site), and not to use it regularly, for security reason.
+Since this chromium is old, I suggest that just use it for twitter2mewe (so it will only access MeWe site), and not to use it regularly, for security reason.
 
 ## Installation
 
